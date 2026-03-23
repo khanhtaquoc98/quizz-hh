@@ -530,7 +530,7 @@ export default function App() {
                         if (!suspectName.trim()) return;
                         setIsSubmitting(true);
                         try {
-                          const SHEET_URL = 'https://script.google.com/macros/s/REPLACE_WITH_YOUR_SCRIPT_ID/exec';
+                          const SHEET_URL = import.meta.env.VITE_SHEET_URL;
                           await fetch(SHEET_URL, {
                             method: 'POST',
                             mode: 'no-cors',
