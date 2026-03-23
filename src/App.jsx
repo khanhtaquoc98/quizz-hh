@@ -245,6 +245,11 @@ export default function App() {
   const [clues, setClues] = useState([]);
   const [score, setScore] = useState(0);
 
+  // Suspect submission
+  const [suspectName, setSuspectName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   // Store last result for result/explanation screens
   const [lastResult, setLastResult] = useState(null);
 
@@ -506,9 +511,61 @@ export default function App() {
                 </ul>
               </div>
 
-              <div className="final-target">🎯 HUNG THỦ LÀ: [ĐIỀN TÊN HỌC SINH NỮ]</div>
+              <div className="final-target">
+                <h3>🎯 KẾT LUẬN: HUNG THỦ LÀ AI?</h3>
+                {!submitted ? (
+                  <div className="suspect-form">
+                    <input
+                      type="text"
+                      className="input-field"
+                      placeholder="NHẬP TÊN NGHI PHẠM..."
+                      value={suspectName}
+                      onChange={(e) => setSuspectName(e.target.value)}
+                      disabled={isSubmitting}
+                    />
+                    <button
+                      className="btn"
+                      disabled={!suspectName.trim() || isSubmitting}
+                      onClick={async () => {
+                        if (!suspectName.trim()) return;
+                        setIsSubmitting(true);
+                        try {
+                          const SHEET_URL = 'https://script.google.com/macros/s/REPLACE_WITH_YOUR_SCRIPT_ID/exec';
+                          await fetch(SHEET_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              teamName,
+                              suspectName: suspectName.trim(),
+                              score: `${score}/${totalQuestions}`,
+                              clues: clues.join(' | '),
+                              timestamp: new Date().toLocaleString('vi-VN'),
+                            }),
+                          });
+                          setSubmitted(true);
+                        } catch (err) {
+                          console.error(err);
+                          setSubmitted(true);
+                        }
+                        setIsSubmitting(false);
+                      }}
+                    >
+                      {isSubmitting ? '⏳ ĐANG GỬI...' : '📨 GỬI KẾT QUẢ'}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="submit-success">
+                    <div className="success-icon">✅</div>
+                    <p>KẾT QUẢ ĐÃ ĐƯỢC GỬI THÀNH CÔNG!</p>
+                    <p className="suspect-result">Nghi phạm: <strong>{suspectName}</strong></p>
+                  </div>
+                )}
+              </div>
 
-              
+              <div style={{ textAlign: 'center', marginTop: 12 }}>
+                <button className="btn" onClick={() => window.location.reload()}>🔄 CHƠI LẠI TỪ ĐẦU</button>
+              </div>
             </div>
           </div>
         )}
