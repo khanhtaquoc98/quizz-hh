@@ -506,11 +506,9 @@ export default function App() {
                 </ul>
               </div>
 
-              <div className="final-target">🎯 HUNG THỦ LÀ: BẠN [ĐIỀN TÊN HỌC SINH NỮ]</div>
+              <div className="final-target">🎯 HUNG THỦ LÀ: [ĐIỀN TÊN HỌC SINH NỮ]</div>
 
-              <div style={{ textAlign: 'center', marginTop: 12 }}>
-                <button className="btn" onClick={() => window.location.reload()}>🔄 CHƠI LẠI TỪ ĐẦU</button>
-              </div>
+              
             </div>
           </div>
         )}
