@@ -99,10 +99,10 @@ export const questionsData = {
       title: 'Hồ sơ #07: Dấu vết kết tủa',
       question: 'Nhỏ dung dịch Br₂ vào dung dịch phenol sẽ thấy hiện tượng',
       options: [
-        { id: 'q7_a', text: 'Dết tủa màu vàng.' },
-        { id: 'q7_b', text: 'Dết tủa màu trắng.' },
+        { id: 'q7_a', text: 'Kết tủa màu vàng.' },
+        { id: 'q7_b', text: 'Kết tủa màu trắng.' },
         { id: 'q7_c', text: 'Sủi bọt khí.' },
-        { id: 'q7_d', text: 'Dết tủa màu đen.' },
+        { id: 'q7_d', text: 'Kết tủa màu đen.' },
       ],
       correctAnswerId: 'q7_b',
       clue: 'Vị trí hiện tại: Gần ngay trung tâm',
