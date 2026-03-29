@@ -1074,3 +1074,26 @@ body::after {
   white-space: nowrap;
   user-select: none;
 }
+
+/* ========== SPLIT CONTAINER ========== */
+.final-splitcontainer {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.final-splitcontainer > .final-clues,
+.final-splitcontainer > .final-target {
+  flex: 1;
+  margin-top: 0;
+  margin-bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .final-splitcontainer {
+    flex-direction: column;
+  }
+}

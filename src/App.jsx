@@ -139,8 +139,8 @@ function ResultScreen({ isCorrect, clue, onNext, nextLabel }) {
             <div className="result-icon">🔓</div>
             <h2 className="result-title">MANH MỐI ĐÃ ĐƯỢC MỞ KHÓA!</h2>
             <div className="result-clue">{clue}</div>
-            <button className="btn" onClick={onNext}>
-              📖 XEM GIẢI THÍCH KHOA HỌC
+            <button className="btn btn-next visible" onClick={onNext}>
+              {nextLabel}
             </button>
           </div>
         ) : (
@@ -343,11 +343,7 @@ export default function App() {
 
   /* ---------- Advance from result ---------- */
   const handleResultNext = () => {
-    if (lastResult?.isCorrect) {
-      setPhase('explanation'); // go to explanation screen
-    } else {
-      advanceToNext(); // skip explanation, go to next question
-    }
+    advanceToNext();
   };
 
   /* ---------- Advance from explanation ---------- */
@@ -382,7 +378,7 @@ export default function App() {
       <div className="corner-decoration top-right" />
       <div className="corner-decoration bottom-left" />
       <div className="corner-decoration bottom-right" />
-      <div className="stamp-overlay">MẬT</div>
+      <div className="stamp-overlay">PHENOL</div>
 
       <div className="app-container">
 
@@ -464,7 +460,6 @@ export default function App() {
             {phase === 'gate' && screen === 'part1' && (
               <PasswordGate
                 title="🔒 MẬT MÃ TRUY CẬP PHẦN 2 (LẤY DẤU VÂN TAY)"
-                hint="Gợi ý: Tính chất đặc trưng của phenol khi so sánh với alcohol"
                 errorText="MẬT MÃ KHÔNG CHÍNH XÁC!"
                 password={questionsData.passwords.part1to2}
                 onSuccess={() => { setScreen('part2'); setPhase('question'); setLastResult(null); playDramaticMusic(); }}
@@ -474,7 +469,6 @@ export default function App() {
             {phase === 'gate' && screen === 'part2' && (
               <PasswordGate
                 title="🔒 LỆNH TỪ CHỈ HUY ĐỂ MỞ HỒ SƠ PHÁ ÁN"
-                hint="Gợi ý: Tên gọi của hợp chất kết tủa khi cho phenol tác dụng với HNO₃ đặc/H₂SO₄ đặc"
                 errorText="LỆNH TỪ CHỐI!"
                 password={questionsData.passwords.part2toFinal}
                 buttonText="KẾT ÁN"
@@ -498,73 +492,75 @@ export default function App() {
                 THU THẬP ĐƯỢC: <span className="score-value">{score}/{totalQuestions}</span> MANH MỐI
               </div>
 
-              <div className="final-clues">
-                <p>🔍 Tổng hợp manh mối đã thu thập:</p>
-                <ul>
-                  {clues.length > 0 ? (
-                    clues.map((clue, idx) => <li key={idx}>🔍 {clue}</li>)
-                  ) : (
-                    <li style={{ borderLeftColor: 'var(--accent-red)', color: 'var(--accent-red)' }}>
-                      Không có manh mối nào được thu thập!
-                    </li>
-                  )}
-                </ul>
-              </div>
+              <div className="final-splitcontainer">
+                <div className="final-clues">
+                  <p>🔍 Tổng hợp manh mối đã thu thập:</p>
+                  <ul>
+                    {clues.length > 0 ? (
+                      clues.map((clue, idx) => <li key={idx}>🔍 {clue}</li>)
+                    ) : (
+                      <li style={{ borderLeftColor: 'var(--accent-red)', color: 'var(--accent-red)' }}>
+                        Không có manh mối nào được thu thập!
+                      </li>
+                    )}
+                  </ul>
+                </div>
 
-              <div className="final-target">
-                <h3>🎯 KẾT LUẬN: HUNG THỦ LÀ AI?</h3>
-                {!submitted ? (
-                  <div className="suspect-form">
-                    <input
-                      type="text"
-                      className="input-field"
-                      placeholder="NHẬP TÊN NGHI PHẠM..."
-                      value={suspectName}
-                      onChange={(e) => setSuspectName(e.target.value)}
-                      disabled={isSubmitting}
-                    />
-                    <button
-                      className="btn"
-                      disabled={!suspectName.trim() || isSubmitting}
-                      onClick={async () => {
-                        if (!suspectName.trim()) return;
-                        setIsSubmitting(true);
-                        try {
-                          const SHEET_URL = import.meta.env.VITE_SHEET_URL;
-                          await fetch(SHEET_URL, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                              teamName,
-                              suspectName: suspectName.trim(),
-                              score: `${score}/${totalQuestions}`,
-                              clues: clues.join(' | '),
-                              timestamp: new Date().toLocaleString('vi-VN'),
-                            }),
-                          });
-                          setSubmitted(true);
-                        } catch (err) {
-                          console.error(err);
-                          setSubmitted(true);
-                        }
-                        setIsSubmitting(false);
-                      }}
-                    >
-                      {isSubmitting ? '⏳ ĐANG GỬI...' : '📨 GỬI KẾT QUẢ'}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="submit-success">
-                    <div className="success-icon">✅</div>
-                    <p>KẾT QUẢ ĐÃ ĐƯỢC GỬI THÀNH CÔNG!</p>
-                    <p className="suspect-result">Nghi phạm: <strong>{suspectName}</strong></p>
-                  </div>
-                )}
+                <div className="final-target">
+                  <h3>🎯 KẾT LUẬN: HUNG THỦ LÀ AI?</h3>
+                  {!submitted ? (
+                    <div className="suspect-form">
+                      <input
+                        type="text"
+                        className="input-field"
+                        placeholder="NHẬP TÊN NGHI PHẠM..."
+                        value={suspectName}
+                        onChange={(e) => setSuspectName(e.target.value)}
+                        disabled={isSubmitting}
+                      />
+                      <button
+                        className="btn"
+                        disabled={!suspectName.trim() || isSubmitting}
+                        onClick={async () => {
+                          if (!suspectName.trim()) return;
+                          setIsSubmitting(true);
+                          try {
+                            const SHEET_URL = import.meta.env.VITE_SHEET_URL;
+                            await fetch(SHEET_URL, {
+                              method: 'POST',
+                              mode: 'no-cors',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                teamName,
+                                suspectName: suspectName.trim(),
+                                score: `${score}/${totalQuestions}`,
+                                clues: clues.join(' | '),
+                                timestamp: new Date().toLocaleString('vi-VN'),
+                              }),
+                            });
+                            setSubmitted(true);
+                          } catch (err) {
+                            console.error(err);
+                            setSubmitted(true);
+                          }
+                          setIsSubmitting(false);
+                        }}
+                      >
+                        {isSubmitting ? '⏳ ĐANG GỬI...' : '📨 GỬI KẾT QUẢ'}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="submit-success">
+                      <div className="success-icon">✅</div>
+                      <p>KẾT QUẢ ĐÃ ĐƯỢC GỬI THÀNH CÔNG!</p>
+                      <p className="suspect-result">Nghi phạm: <strong>{suspectName}</strong></p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div style={{ textAlign: 'center', marginTop: 12 }}>
-                <button className="btn" onClick={() => window.location.reload()}>🔄 CHƠI LẠI TỪ ĐẦU</button>
+                <button className="btn" onClick={() => window.location.reload()}>CHƠI LẠI TỪ ĐẦU</button>
               </div>
             </div>
           </div>
